@@ -126,5 +126,6 @@ def train_binary_model(
 def plot_roc_pr(model_out: ModelOutput, results_dir: Path, roc_path: Path, pr_path: Path) -> None:
     from src.plots import plot_roc_curve, plot_pr_curve
     results_dir.mkdir(parents=True, exist_ok=True)
-    plot_roc_curve(model_out.curves.get("roc", {}), roc_path)
+    auc = model_out.metrics.get("roc_auc")
+    plot_roc_curve(model_out.curves.get("roc", {}), roc_path, auc=auc)
     plot_pr_curve(model_out.curves.get("pr", {}), pr_path)

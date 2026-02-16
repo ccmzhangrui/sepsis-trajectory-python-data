@@ -4,6 +4,14 @@ from pathlib import Path
 from typing import Tuple
 import pandas as pd
 
+# Match trajectory group display names and colors (same as Main_Figure1)
+TRAJ_GROUP_NAMES = {0: "Rapid Recovery", 1: "Slow Recovery", 2: "Clinical Deterioration"}
+TRAJ_COLORS = ["#4daf4a", "#ff7f00", "#e41a1c"]
+
+
+def _traj_label(g) -> str:
+    return TRAJ_GROUP_NAMES.get(int(g), f"Group {g}")
+
 
 @dataclass(frozen=True)
 class SurvivalConfig:
@@ -43,13 +51,17 @@ def run_survival_analyses(df: pd.DataFrame, cfg: SurvivalConfig, results_dir: Pa
     km = KaplanMeierFitter()
     km_plot_path = results_dir / "figure4_km.png"
     plt.figure(figsize=(7.2, 5.2), dpi=160)
-    for g, sub in d.groupby(cfg.group_col):
-        km.fit(sub[cfg.duration_col], event_observed=sub[cfg.event_col], label=str(g))
-        km.plot_survival_function(ci_show=True, linewidth=2)
+    for g in sorted(d[cfg.group_col].unique()):
+        sub = d[d[cfg.group_col] == g]
+        gi = int(g)
+        c = TRAJ_COLORS[gi] if gi < len(TRAJ_COLORS) else None
+        km.fit(sub[cfg.duration_col], event_observed=sub[cfg.event_col], label=f"{_traj_label(g)} (n={len(sub)})")
+        km.plot_survival_function(ci_show=True, linewidth=2, color=c)
     plt.title(f"Kaplan–Meier by trajectory group (logrank p={logrank_p:.3g})")
     plt.xlabel("Days")
     plt.ylabel("Survival probability")
     plt.grid(alpha=0.25)
+    plt.legend(title="Trajectory", fontsize=10)
     plt.tight_layout()
     plt.savefig(km_plot_path)
     plt.close()

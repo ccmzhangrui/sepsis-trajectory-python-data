@@ -4,6 +4,7 @@
     "sex",
     "traj_p0",
     "traj_p1",
+    "traj_p2",
     "sofa_mean",
     "sofa_std",
     "sofa_delta_0_24",

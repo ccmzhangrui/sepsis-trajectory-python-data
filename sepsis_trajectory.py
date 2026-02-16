@@ -102,6 +102,7 @@ def main() -> None:
         degree=3,
         k_min=2,
         k_max=6,
+        fixed_k=3,  # 3 trajectories: Rapid Recovery, Slow Recovery, Clinical Deterioration
         covariance_type="full",
         random_state=RANDOM_SEED,
     )
@@ -206,6 +207,25 @@ def main() -> None:
         },
     }
     save_json(results_dir / "run_summary.json", summary)
+
+    # Main/Supplementary figures: use REAL pipeline results when data is real (xlsx);
+    # use simulated article figures when data is synthetic (CSV) so figures match the paper.
+    used_real_data = xlsx_path.exists()
+    if used_real_data:
+        from figures_from_pipeline import gen_all_from_pipeline
+        gen_all_from_pipeline(
+            results_dir=results_dir,
+            df_traj=df_traj,
+            traj_out=traj_out,
+            model_out=model_out,
+            surv_out=surv_out,
+            traj_cfg=traj_cfg,
+            models_dir=models_dir,
+        )
+    else:
+        from run_article_figures import main as gen_article_figures
+        gen_article_figures(results_dir=results_dir)
+
     print("Done.")
     print(f"- Models:  {models_dir}")
     print(f"- Results: {results_dir}")

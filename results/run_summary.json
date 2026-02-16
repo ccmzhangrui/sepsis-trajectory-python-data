@@ -17,7 +17,7 @@
       "lactate_24h",
       "lactate_48h"
     ],
-    "n_features": 21,
+    "n_features": 22,
     "random_state": 42,
     "sofa_cols": [
       "sofa_0h",
@@ -37,12 +37,12 @@
   "modeling": {
     "id_col": "patient_id",
     "metrics": {
-      "accuracy": 0.825,
-      "f1": 0.4067796610169492,
-      "pr_auc": 0.5220492276144625,
-      "precision": 0.26666666666666666,
-      "recall": 0.8571428571428571,
-      "roc_auc": 0.8897849462365591
+      "accuracy": 0.84,
+      "f1": 0.6,
+      "pr_auc": 0.6914862914862915,
+      "precision": 0.6,
+      "recall": 0.6,
+      "roc_auc": 0.9025
     },
     "model_name": "pipeline",
     "model_path": "D:\\Work\\Test\\huatu\\sepsis-trajectory-python-data\\models\\pipeline.pkl",
@@ -51,7 +51,7 @@
     "target_col": "mortality_28d",
     "test_size": 0.25
   },
-  "n_patients": 800,
+  "n_patients": 200,
   "random_seed": 42,
   "survival": {
     "adjust_cols": [
@@ -64,20 +64,22 @@
     "group_col": "traj_label",
     "id_col": "patient_id",
     "km_plot_path": "D:\\Work\\Test\\huatu\\sepsis-trajectory-python-data\\results\\figure4_km.png",
-    "logrank_p_value": 0.36608283091311233
+    "logrank_p_value": 0.051233963457224876
   },
   "trajectory": {
     "covariance_type": "full",
     "degree": 3,
+    "fixed_k": 3,
     "k_max": 6,
     "k_min": 2,
     "label_col": "traj_label",
     "posterior_cols": [
       "traj_p0",
-      "traj_p1"
+      "traj_p1",
+      "traj_p2"
     ],
     "random_state": 42,
-    "selected_k": 2,
+    "selected_k": 3,
     "sofa_cols": [
       "sofa_0h",
       "sofa_6h",

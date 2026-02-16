@@ -1,12 +1,23 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import numpy as np
 import pandas as pd
 from sklearn.mixture import GaussianMixture
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
+
+
+# Display names for trajectory groups (0=Rapid, 1=Slow, 2=Deterioration)
+TRAJ_GROUP_NAMES = {0: "Rapid Recovery", 1: "Slow Recovery", 2: "Clinical Deterioration"}
+# Same palette and markers as Main_Figure1 (green / orange / red; circle / square / triangle)
+TRAJ_COLORS = ["#4daf4a", "#ff7f00", "#e41a1c"]
+TRAJ_MARKERS = ["o", "s", "^"]
+
+
+def _traj_label(g) -> str:
+    return TRAJ_GROUP_NAMES.get(int(g), f"Group {g}")
 
 
 @dataclass(frozen=True)
@@ -16,6 +27,7 @@ class TrajectoryConfig:
     degree: int = 3
     k_min: int = 2
     k_max: int = 6
+    fixed_k: Optional[int] = None  # if set, use this K instead of BIC (e.g. 3 for Rapid/Slow/Deterioration)
     covariance_type: str = "full"
     random_state: int = 42
 
@@ -61,7 +73,19 @@ def fit_trajectory_gmm_bic(df: pd.DataFrame, cfg: TrajectoryConfig, results_dir:
         bics.append((k, bic))
         models[k] = gmm
     bic_table = pd.DataFrame(bics, columns=["k", "bic"]).sort_values("k")
-    selected_k = int(bic_table.loc[bic_table["bic"].idxmin(), "k"])
+    if cfg.fixed_k is not None:
+        selected_k = int(cfg.fixed_k)
+        if selected_k not in models:
+            gmm = GaussianMixture(
+                n_components=selected_k,
+                covariance_type=cfg.covariance_type,
+                random_state=cfg.random_state,
+                n_init=10,
+            )
+            gmm.fit(X)
+            models[selected_k] = gmm
+    else:
+        selected_k = int(bic_table.loc[bic_table["bic"].idxmin(), "k"])
     best = models[selected_k]
     plt.figure(figsize=(6.0, 4.2), dpi=160)
     plt.plot(bic_table["k"], bic_table["bic"], marker="o", linewidth=2)
@@ -100,17 +124,19 @@ def plot_sofa_trajectories(
     results_path.parent.mkdir(parents=True, exist_ok=True)
     d = df.dropna(subset=[traj_label_col]).copy()
     plt.figure(figsize=(7.5, 5.2), dpi=160)
-    for g, sub in d.groupby(traj_label_col):
+    for g in sorted(d[traj_label_col].unique()):
+        sub = d[d[traj_label_col] == g]
         mat = sub[sofa_cols].to_numpy(dtype=float)
         mean = np.nanmean(mat, axis=0)
         sem = np.nanstd(mat, axis=0, ddof=1) / np.sqrt(max(len(sub), 1))
-        plt.plot(t, mean, linewidth=2, label=f"Group {g}")
-        plt.fill_between(t, mean - sem, mean + sem, alpha=0.18)
+        c = TRAJ_COLORS[int(g)] if int(g) < len(TRAJ_COLORS) else None
+        plt.plot(t, mean, linewidth=2, color=c, label=f"{_traj_label(g)} (n={len(sub)})")
+        plt.fill_between(t, mean - sem, mean + sem, color=c, alpha=0.18)
     plt.title("SOFA trajectories by inferred group")
     plt.xlabel("Hours")
     plt.ylabel("SOFA")
     plt.grid(alpha=0.25)
-    plt.legend()
+    plt.legend(title="Trajectory", fontsize=10)
     plt.tight_layout()
     plt.savefig(results_path)
     plt.close()
@@ -126,12 +152,17 @@ def plot_pca_trajectories(coef_df: pd.DataFrame, label_series: pd.Series, result
     plt.figure(figsize=(6.0, 5.0), dpi=160)
     for g in sorted(labels.dropna().unique()):
         idx = labels == g
-        plt.scatter(Z[idx, 0], Z[idx, 1], s=22, alpha=0.75, label=f"Group {g}")
+        n = int(idx.sum())
+        gi = int(g)
+        col = TRAJ_COLORS[gi] if gi < len(TRAJ_COLORS) else None
+        mk = TRAJ_MARKERS[gi] if gi < len(TRAJ_MARKERS) else "o"
+        plt.scatter(Z[idx, 0], Z[idx, 1], c=col, marker=mk, s=28, alpha=0.8,
+                    label=f"{_traj_label(g)} (n={n})", edgecolors="white", linewidths=0.3)
     plt.title("PCA of polynomial coefficients")
     plt.xlabel("PC1")
     plt.ylabel("PC2")
     plt.grid(alpha=0.25)
-    plt.legend()
+    plt.legend(title="Trajectory", fontsize=10)
     plt.tight_layout()
     plt.savefig(results_path)
     plt.close()
