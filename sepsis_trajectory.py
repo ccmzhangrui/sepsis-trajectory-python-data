@@ -38,20 +38,39 @@ from src.plots import plot_multi_param_trends
 RANDOM_SEED = 42
 
 
-def _load_data(csv_path: Path) -> pd.DataFrame:
-    df = pd.read_csv(csv_path)
-    required = [
-        "patient_id",
-        "sofa_0h", "sofa_6h", "sofa_12h", "sofa_24h", "sofa_48h",
-        "lactate_0h", "lactate_6h", "lactate_12h", "lactate_24h", "lactate_48h",
-        "age", "sex",
-        "mortality_28d",
-        "time_to_event_days",
-        "event_observed",
-    ]
-    missing = [c for c in required if c not in df.columns]
+REQUIRED_COLUMNS = [
+    "patient_id",
+    "sofa_0h", "sofa_6h", "sofa_12h", "sofa_24h", "sofa_48h",
+    "lactate_0h", "lactate_6h", "lactate_12h", "lactate_24h", "lactate_48h",
+    "age", "sex",
+    "mortality_28d",
+    "time_to_event_days",
+    "event_observed",
+]
+
+# Map client Excel headers to pipeline column names
+COLUMN_ALIASES = {
+    "event_28d": "event_observed",
+    "t0_sofa": "sofa_0h", "t6_sofa": "sofa_6h", "t12_sofa": "sofa_12h",
+    "t24_sofa": "sofa_24h", "t48_sofa": "sofa_48h",
+    "t0_lactate": "lactate_0h", "t6_lactate": "lactate_6h", "t12_lactate": "lactate_12h",
+    "t24_lactate": "lactate_24h", "t48_lactate": "lactate_48h",
+}
+
+
+def _load_data(path: Path) -> pd.DataFrame:
+    """Load dataset from CSV or Excel; validate required columns."""
+    if path.suffix.lower() in (".xlsx", ".xls"):
+        df = pd.read_excel(path, engine="openpyxl")
+    else:
+        df = pd.read_csv(path)
+    # Apply column aliases (e.g. client format: event_28d, t0_sofa, ...)
+    rename = {k: v for k, v in COLUMN_ALIASES.items() if k in df.columns}
+    if rename:
+        df = df.rename(columns=rename)
+    missing = [c for c in REQUIRED_COLUMNS if c not in df.columns]
     if missing:
-        raise ValueError(f"Input CSV missing required columns: {missing}")
+        raise ValueError(f"Input file missing required columns: {missing}")
     df["patient_id"] = df["patient_id"].astype(str)
     df["mortality_28d"] = df["mortality_28d"].astype(int)
     df["event_observed"] = df["event_observed"].astype(int)
@@ -66,10 +85,15 @@ def main() -> None:
     results_dir = root / "results"
     ensure_dirs([data_dir, models_dir, results_dir])
 
-    # Ensure synthetic CSV exists
+    # Prefer raw data: xlsx if provided, else CSV (generate if missing)
+    xlsx_path = data_dir / "synthetic_sample_data.xlsx"
     csv_path = data_dir / "synthetic_sample_data.csv"
-    ensure_synthetic_csv(csv_path, n=200, seed=RANDOM_SEED)
-    df = _load_data(csv_path)
+    if xlsx_path.exists():
+        print(f"Using raw data: {xlsx_path}")
+        df = _load_data(xlsx_path)
+    else:
+        ensure_synthetic_csv(csv_path, n=200, seed=RANDOM_SEED)
+        df = _load_data(csv_path)
 
     # -------- Trajectory modeling (GMM + BIC)
     traj_cfg = TrajectoryConfig(
