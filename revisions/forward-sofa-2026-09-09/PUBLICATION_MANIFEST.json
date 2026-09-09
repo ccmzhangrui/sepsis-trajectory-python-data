@@ -1,0 +1,74 @@
+{
+  "scope": "Source code and documentation only; no clinical tables, private outputs or fitted model files",
+  "executed_source_archive_sha256": "2cbbb0ad249b870cba177208c7e1df48e9de0c88f03fec5098967d38311ce8d5",
+  "unchanged_archive_files_sha256": {
+    "environment.json": "f441cc827f192fca7caaf3c42d4a50dc65c518a6091af2ab172ebcdf1c9d39fc",
+    "work/future_trajectory/plot_forward.py": "cb43f1bf222413aa38a88462ee3e8827b0c43ca01d65936db1cf885171b0b3ec",
+    "work/future_trajectory/protocol.md": "c08d58d6dabfd378515ad7e8bcf659f18f06617527b76b98cd2778c09c62d0c9",
+    "work/future_trajectory/run_forward.py": "998988f2a4f6c76ea891358ef374589482291043ae4b93534bbb51f1c0faaefc",
+    "work/future_trajectory/verify_forward.py": "3214c85a23e2c36e2f2b7cd8ef51a1e67f0db1ca9c3fc8cfdc96177b7388bcd5",
+    "work/mimiciii/01_extract.py": "5ad5c06bd0b4a5e137fca2395c3b772d502af0e64e7808d192bb0605a677692b",
+    "work/mimiciii/02_score_sofa.py": "734e3d7f9ff6903ac43f1e5dda64672671a9fb38d05694dcce76d31a97154c77",
+    "work/mimiciii/03_cohort.py": "abe1d9856e5272a24286efdee0f427ee86d161014f4c72d89e5071b527627659",
+    "work/mimiciii/04_fit_trajectories.py": "ce08d921eb55427a0b26e7b9a89ae5522466236624cb710e7a0b7eb00b24ba84",
+    "work/mimiciii/05_features.py": "6c600a665f6b1b709bed5775dac7fab5eb0ffce9d4a7d4bab55efbe9a1e4c964",
+    "work/mimiciii/06_crossvalidate.py": "b4e84e8b0c8d195e4fd089ea5b9305a1d59726d0c1fb8003417130d90dff921d",
+    "work/mimiciii/07_pairwise.py": "5a1b4e318dc4aba88765d956cd58b613eea6c9ae37e80b42fae74c45d743d052",
+    "work/mimiciii/gbtm.py": "855c218ddb31735a48c650a792f9b392e219d4a959269b075289f45f133a609b",
+    "work/mimiciii/official/mimic-iii__concepts_duckdb__pivot__pivoted_bg.sql": "01104211eab21fb824fdc23fd7f3cab6a5d463567b605bae5a5041b1e95e7f0b",
+    "work/mimiciii/official/mimic-iii__concepts_duckdb__pivot__pivoted_bg_art.sql": "727a2af2dc65a0115981d3dfb5ec3d7187ee17a0664b0320d522f905caa4aadd",
+    "work/mimiciii/official/mimic-iii__concepts_duckdb__pivot__pivoted_gcs.sql": "3c9b96c87bcb182cbbff9b644d84fa9b7d22530a2f95e818b2448bc81ff2c1ff",
+    "work/mimiciii/official/mimic-iii__concepts_duckdb__pivot__pivoted_lab.sql": "0e289c9dd152aecceea2f9f3695eba128c49968c9236c52dadfcf52134787b18",
+    "work/multicohort/aggregate_checks.py": "b2650b1f707d80aee570364a2a7a2e4216e7d5cda56fce86f32c2fff435dfab4",
+    "work/multicohort/clinical_deterioration.py": "ad19ca97228357b7ca98768cfcc6fb18e242dd434f75af58403f53755344c30d",
+    "work/multicohort/deterioration_protocol_locked.md": "c256dbd857fff059bc31fa48d24d76bfce72c55b6044bd6ead6182b7aee7d3b7",
+    "work/multicohort/eicu_extract.py": "e42166e412a594b36c7d2d5e62bfe36c1ea6d63867b0ccf2011530bdac391a77",
+    "work/multicohort/eicu_features.py": "0ff3d63ccd7adfb769a965f8b6a1499ba25a0c07d9bbf8bd84577674e3f8c5f3",
+    "work/multicohort/figure_inference.py": "f91c69b099cce2130b5eb5a4bbd730d23cbad085a08b38d1753d826c7e3061b1",
+    "work/multicohort/landmark_corrected_analysis.py": "1bb5e8267d795004ce124488619f0e27ccd25c28855ce0722e20baf8861a19ba",
+    "work/multicohort/mimiciii/04_fit_trajectories.py": "29cfcada4674939db07e0bc85e3420ff66462f5630d2a585befe27fde0748761",
+    "work/multicohort/mimiciii/06_crossvalidate.py": "7c059becd131aad1ab7c9d85039e303713daf079cdf855df0abba700b14e7d8a",
+    "work/multicohort/mimiciii/07_pairwise.py": "6acbdb4bcacfc2c53b908e44d0eb4ca71c112b556cb0d97b57dbd50d8778719c",
+    "work/multicohort/mimiciii/gbtm.py": "855c218ddb31735a48c650a792f9b392e219d4a959269b075289f45f133a609b",
+    "work/multicohort/mortality_models.py": "832701e66d4e91f480844001218581ca51011daa0ce4ea72551d755a6780d075",
+    "work/multicohort/plot_decimal_figures.py": "665f89254860ca4f71a481f044db4d200906c07e1bab829d52e60aa54a597c16",
+    "work/multicohort/plot_numeric_figures.py": "da5f30f3f2458af22c56b988a3f271002af03f4280e3762cc0b92c0bd9b058dc",
+    "work/multicohort/plot_submission.py": "c53c030094071d3fb80c703f7affaf7bc02cf57712e704679dbd372419e30fda",
+    "work/multicohort/plot_time_risk.py": "fab433cdbcbab887133d2a0608a032c6d86a1dba911562a5010e3b2e4aef36d0",
+    "work/multicohort/prepare_mimiciii.py": "e376b94fba7021f91d21d821a3698692a8dd97ede5e09d23681dac7377ef0c9a",
+    "work/multicohort/rerun_mimiciii.py": "43b55b6d857cba858e71b71892d15b981a7e20c47d73985275077193163f8fb7",
+    "work/multicohort/time_risk_analysis.py": "1ee567917c2f2d3ad17be38fd2e7286a754d5732983986d26af26ade8609fdf4",
+    "work/multicohort/time_risk_protocol.md": "b146e47892d43b166efc5bdfc2f86fed4113d11e3c351b71b55765ce80c27dd3",
+    "work/reanalysis/run_analysis.py": "7387879bab46cc0869e9796706272a851db56cad00af0e7a403770cf857fa109",
+    "work/reviewer_revision/verify_time_risk.py": "0ba370adfcf2cec4810bcc2039d3448e327e9fc4a8bc68fba6e811daf51029ad"
+  },
+  "publication_helpers": [
+    "run_workflow.py",
+    "prepare_forward_inputs.py"
+  ],
+  "python_sources_parse_checked": 33,
+  "dry_run_checks": [
+    {
+      "stage": "source",
+      "commands": 5,
+      "passed": true
+    },
+    {
+      "stage": "forward",
+      "commands": 5,
+      "passed": true
+    },
+    {
+      "stage": "secondary",
+      "commands": 14,
+      "passed": true
+    },
+    {
+      "stage": "figures",
+      "commands": 3,
+      "passed": true
+    }
+  ],
+  "missing_input_prevents_execution": true,
+  "model_refits_during_publication": 0
+}

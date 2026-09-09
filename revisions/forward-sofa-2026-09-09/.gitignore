@@ -1,0 +1,33 @@
+# All generated data and fitted outputs stay in the local authorized environment.
+**/private/
+**/results/
+**/figures/
+**/__pycache__/
+**/spill/
+*.py[cod]
+*.pkl
+*.pickle
+*.parquet
+*.feather
+*.duckdb*
+*.db
+*.sqlite*
+*.npy
+*.npz
+*.joblib
+*.rds
+*.RData
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.zip
+*.pdf
+*.png
+*.svg
+.env
+.env.*
+.venv/
+.DS_Store
+# Analysis scripts also write audit JSON next to code.
+work/**/*.json
